@@ -27,7 +27,7 @@ class Obstacle:
         self.y += self.dy
         return (self.x, self.y)
 
-    def add_constraints(self, s, X):
+    def add_constraints(self, s, X, HOPS, GRID_SZ):
         for t in range(HOPS+1):
             nx, ny = self.next_move()
             if((0 <= nx < GRID_SZ) and (0 <= ny  < GRID_SZ)):
@@ -57,15 +57,23 @@ def path_valid(robot_plan, obs_plan):
 def distance(x1, y1, x2, y2):
         return abs(x1-x2) + abs(y1-y2)    
 
-GRID_SZ = 10
-HOPS = 18
+# GRID_SZ = 10
+# HOPS = 18
 
-print("WORKSPACE SIZE (%s x %s)" % (GRID_SZ, GRID_SZ))
-print("HOPS ALLOWED = %s" % (HOPS))
+# print("WORKSPACE SIZE (%s x %s)" % (GRID_SZ, GRID_SZ))
+# print("HOPS ALLOWED = %s" % (HOPS))
 
 def main(args):
     # print(args)
     seed = int(args[0])
+    GRID_SZ = int(args[1])
+    HOPS = int(args[2])
+
+
+    print("WORKSPACE SIZE (%s x %s)" % (GRID_SZ, GRID_SZ))
+    print("HOPS ALLOWED = %s" % (HOPS))
+
+
     random.seed(seed)
 
 
@@ -158,8 +166,8 @@ def main(args):
 
     obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ)]
     
-    obs[0].add_constraints(s, X) # Add future positions of obs1 to solver
-    obs[1].add_constraints(s, X)
+    obs[0].add_constraints(s, X, HOPS, GRID_SZ) # Add future positions of obs1 to solver
+    obs[1].add_constraints(s, X, HOPS, GRID_SZ)
     robot_plan = []
     if (s.check() == sat):
         m = s.model()

@@ -22,13 +22,17 @@ class Obstacle:
 def get_plan(m):
     return sorted([d.name() for d in m.decls() if m[d]==True], key=lambda item: int(item.split('_')[1]))
 
-# GRID_SZ = 4
-# HOPS = 10
+# GRID_SZ = 10
+# HOPS = 20
 
 def main(args):
     seed_val = int(args[0])
-    HOPS = int(args[1])
-    GRID_SZ = int(args[2])
+    GRID_SZ = int(args[1])
+    HOPS = int(args[2])
+
+    print("WORKSPACE SIZE (%s x %s)" % (GRID_SZ, GRID_SZ))
+    print("HOPS ALLOWED = %s" % (HOPS))
+
     random.seed(seed_val)
     # X is a three dimensional grid containing (t, x, y)
     X =  [ [ [ Bool("x_%s_%s_%s" % (k, i, j)) 
@@ -68,9 +72,7 @@ def main(args):
                         temp = Or(temp, X[t][x-1][y])
                     if (y-1 >= 0):
                         temp = Or(temp, X[t][x][y-1])
-                #     print(simplify(Implies(X[t+1][x][y], temp)))
                     s.add(simplify(Implies(X[t+1][x][y], temp)))
-    # print(s)
 
     #Collision avoidance
     obs1 = Obstacle(0, 3, GRID_SZ)
@@ -93,6 +95,5 @@ def main(args):
 if __name__ == "__main__":
     # print(sys.argv)
     start_time = time.time()
-    print("hello")
     main(sys.argv[1:])
     print("--- %s seconds ---" % (time.time() - start_time))
