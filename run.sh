@@ -1,12 +1,13 @@
 higher=10
 seed=7
 grid=10
+program="optimal_restricted.py"
 
-python3 optimal_random.py $seed $grid $higher > /dev/null
+python3 $program $seed $grid $higher > /dev/null
 
 while [[ $? -eq 1 ]]; do
     higher=$(($higher*2))
-    python3 optimal_random.py $seed $grid $higher > /dev/null
+    python3 $program $seed $grid $higher > /dev/null
 done
 
 lower=$(($higher/2))
@@ -15,7 +16,7 @@ while [[ lower -le higher ]]; do
     echo lower is $lower
     echo mid is $mid
     echo higher is $higher
-    python3 optimal_random.py $seed $mid $grid > /dev/null
+    python3 $program $seed $grid $mid  > /dev/null
     if [[ $? -eq 1 ]]
     then
         lower=$(($mid+1))

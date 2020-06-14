@@ -252,9 +252,12 @@ def main(args):
 if __name__ == "__main__":
     # print(sys.argv)
     start_time = time.time()
-    main(sys.argv[1:])
+    return_code = main(sys.argv[1:])
     print("--- %s seconds ---" % (time.time() - start_time))
-
+    if return_code == 1:
+        exit(1)
+    else:
+        exit(0)
 
 # add only general motion primitives
 # minimize the cost function
