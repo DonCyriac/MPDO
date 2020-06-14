@@ -10,6 +10,7 @@ class Obstacle:
         self.x = x
         self.y = y
         self.grid = grid
+        self.path = [(x, y)]
     
     def next_move(self):
         while (True):
@@ -17,6 +18,7 @@ class Obstacle:
             if ((0 <= self.x+dx < self.grid) and (0 <= self.y+dy < self.grid)):
                 self.x += dx
                 self.y += dy
+                self.path.append((self.x, self.y))
                 return (self.x, self.y)
 
 def get_plan(m):
@@ -75,19 +77,25 @@ def main(args):
                     s.add(simplify(Implies(X[t+1][x][y], temp)))
 
     #Collision avoidance
-    obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ), Obstacle(7, 8, GRID_SZ)]
-    obs_plan = []
+    obs = [Obstacle(3, 3, GRID_SZ), Obstacle(4, 5, GRID_SZ), Obstacle(6, 7, GRID_SZ), Obstacle(8, 9, GRID_SZ), Obstacle(9, 3, GRID_SZ), Obstacle(1, 8, GRID_SZ), Obstacle(7, 7, GRID_SZ)]
+    # obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ), Obstacle(7, 8, GRID_SZ)]
+
+
+    # obs_plan = []
     for o in obs:
         for time in range(HOPS+1):
-            obs_pos = o.next_move()
-            obs_plan.append(obs_pos)
+            obs_pos = (o.x, o.y)
+            # obs_plan.append(obs_pos)
             s.add(Not(X[time][obs_pos[0]][obs_pos[1]]))
+            obs_pos = o.next_move()
 
 
     if s.check() == sat:
         m = s.model()
         print(get_plan(m))
-        print(obs_plan)
+        for obstacle in obs:
+            print(obstacle.path)
+        # print(obs_plan)
         return 0
     else:
         print("UNSAT!!")

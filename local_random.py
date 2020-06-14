@@ -11,14 +11,14 @@ class Obstacle:
         self.x = x
         self.y = y
         self.grid = grid
-        self.dx, self.dy = random.choice(self.moves)
         self.path = [(x, y)]
     
     def next_move(self):
         # while (True):
         # if ((0 <= self.x+self.dx < self.grid) and (0 <= self.y+self.dy < self.grid)):
-        self.x += self.dx
-        self.y += self.dy
+        dx, dy = random.choice(self.moves)
+        self.x += dx
+        self.y += dy
         self.path.append((self.x, self.y))
         return (self.x, self.y)
             # else:
@@ -114,29 +114,52 @@ def main(args):
         print("No.of hops too low...")
         exit(1)
     # obs1 = Obstacle(0, 3, GRID_SZ)
-    obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ)]
+
+    obs = [Obstacle(3, 3, GRID_SZ), Obstacle(4, 5, GRID_SZ), Obstacle(6, 7, GRID_SZ), Obstacle(8, 9, GRID_SZ), Obstacle(9, 3, GRID_SZ), Obstacle(1, 8, GRID_SZ), Obstacle(7, 7, GRID_SZ)]
+    # obs = [Obstacle(3, 3, GRID_SZ)]
+
+
+    ## 
+
+    # obs = []
+    # for i in range(0, GRID_SZ-1):
+    #     for j in range(0, GRID_SZ-1):
+    #         if (i+j)%3 != 0:
+    #             print(i, j)
+    #             obs.append(Obstacle(i, j, GRID_SZ))
+    # print("-----")
+
+
+
+
     robot_plan = []
     hop = 0
+    stay_count = 0
     # obs_plan = []
     # for a in s.assertions():
     #     print(a)
     while (hop < HOPS):
         # print("hops = ", hop)
-        
-        robot_pos = get_robot_pos(m,hop)
-        print("robot_pos = ", robot_pos)
+        if stay_count > 0:
+            robot_pos = [robot_plan[-stay_count][0], robot_plan[-stay_count][1]]
+            next_robot_pos = get_robot_pos(m,hop-stay_count)
+        else:
+            robot_pos = get_robot_pos(m,hop)
+            next_robot_pos = get_robot_pos(m,hop+1)
+        # print("robot_pos = ", robot_pos)
 
-        for obstacle in obs:
-            print("Obstacle at ", (obstacle.x, obstacle.y))
+        # for obstacle in obs:
+        #     print("Obstacle at ", (obstacle.x, obstacle.y))
 
-        print('-----------')
+        # print('-----------')
         s.add(X[hop][robot_pos[0]][robot_pos[1]])
 
         robot_plan.append(robot_pos)
         # obs_plan.append(obs_pos)
         #next position of the robot
-        next_robot_pos = get_robot_pos(m,hop+1)
-        s.push() 
+        # if (stay:
+        
+        # s.push() 
         # print("intersection points")
         # print(intersection_points(robot_pos, obs_pos))
         # count = 0
@@ -157,8 +180,12 @@ def main(args):
             # print("just before check")
             if (s.check() == unsat):
                 print("stay there")
+                print(robot_pos)
+                stay_count += 1
                 # hop -= 1
+                hop += 1
             else:
+                stay_count = 0
                 m = s.model()
                 hop += 1
             # print("just after check")
@@ -166,12 +193,14 @@ def main(args):
             # we don't need to worry about the path
             hop += 1
         # print('dssdfdsfds')
-        s.pop() 
+        # s.pop() 
         for obstacle in obs:
             # print("12")
             obstacle.next_move()
-        
-        
+
+    if (stay_count > 0):
+        return 1    
+    
     robot_pos = get_robot_pos(m,hop)
     for obstacle in obs:
         obstacle.next_move()

@@ -1,7 +1,7 @@
-higher=10
+higher=18
 seed=7
 grid=10
-program="optimal_restricted.py"
+program="optimal_random.py"
 
 python3 $program $seed $grid $higher > /dev/null
 
