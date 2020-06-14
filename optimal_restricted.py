@@ -164,10 +164,12 @@ def main(args):
         print("No.of hops too low...")
         exit(1)
 
-    obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ)]
+    obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ), Obstacle(7,8, GRID_SZ)]
     
     obs[0].add_constraints(s, X, HOPS, GRID_SZ) # Add future positions of obs1 to solver
     obs[1].add_constraints(s, X, HOPS, GRID_SZ)
+    obs[2].add_constraints(s, X, HOPS, GRID_SZ)
+
     robot_plan = []
     if (s.check() == sat):
         m = s.model()

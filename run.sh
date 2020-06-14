@@ -1,12 +1,12 @@
 higher=10
-seed=6
+seed=7
 grid=10
 
-python3 test.py $seed $higher $grid > /dev/null
+python3 optimal_random.py $seed $higher $grid > /dev/null
 
 while [[ $? -eq 1 ]]; do
     higher=$(($higher*2))
-    python3 test.py $seed $higher $grid > /dev/null
+    python3 optimal_random.py $seed $higher $grid > /dev/null
 done
 # echo higher is $higher
 
@@ -16,7 +16,7 @@ while [[ lower -le higher ]]; do
     echo lower is $lower
     echo mid is $mid
     echo higher is $higher
-    python3 test.py $seed $mid $grid > /dev/null
+    python3 optimal_random.py $seed $mid $grid > /dev/null
     if [[ $? -eq 1 ]]
     then
         lower=$(($mid+1))

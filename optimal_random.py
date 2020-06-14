@@ -75,12 +75,13 @@ def main(args):
                     s.add(simplify(Implies(X[t+1][x][y], temp)))
 
     #Collision avoidance
-    obs1 = Obstacle(0, 3, GRID_SZ)
+    obs = [Obstacle(0, 3, GRID_SZ), Obstacle(2, 2, GRID_SZ), Obstacle(7, 8, GRID_SZ)]
     obs_plan = []
-    for time in range(HOPS+1):
-        obs_pos = obs1.next_move()
-        obs_plan.append(obs_pos)
-        s.add(Not(X[time][obs_pos[0]][obs_pos[1]]))
+    for o in obs:
+        for time in range(HOPS+1):
+            obs_pos = o.next_move()
+            obs_plan.append(obs_pos)
+            s.add(Not(X[time][obs_pos[0]][obs_pos[1]]))
 
 
     if s.check() == sat:
